@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApplication11.Models;
-using STISSOEntryCore4;
+using STISSOEntryCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApplication11.Controllers
 {
@@ -25,22 +27,27 @@ namespace WebApplication11.Controllers
         public HomeController(ILogger<HomeController> logger, IConfiguration config, STISSOEntryController sTISSOEntry,
             IHttpContextAccessor httpContextAccessor)
         {
+           
+            
             _logger = logger;
             _config = config;
             this.sTISSOEntry = sTISSOEntry;
             this.httpContext = httpContextAccessor.HttpContext;
+
         }
         
         [AllowAnonymous]
         public IActionResult Index()
         {
+            //return sTISSOEntry.LogInAsync("").Result;
+
             return View();
         }
 
         public IActionResult Privacy()
         {
             //STISSOEntryController sTISSOEntry = new STISSOEntryController(HttpContext, _config);
-            return sTISSOEntry.LogInAsync("").Result;
+            return sTISSOEntry.LogInAsync().Result;
             //return View();
         }
 

@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using STISSOEntryCore4;
+using STISSOEntryCore;
 
 namespace WebApplication11
 {
@@ -27,7 +28,15 @@ namespace WebApplication11
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
 
-            
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie(option =>
+                   {
+                       //option.LoginPath = Configuration["LoginUrl"]; 
+                       //option.LogoutPath = Configuration["LoginUrl"];
+                       option.Cookie.Name = Configuration["STIEntry:CookieName"];
+                       option.AccessDeniedPath = "/Home/Login";
+                   });
+
 
         }
 
@@ -45,7 +54,7 @@ namespace WebApplication11
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
